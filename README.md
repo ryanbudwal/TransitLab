@@ -6,6 +6,8 @@ TransitLab is a full-stack public-transit route planner and disruption simulator
 
 The project is intentionally more than a pathfinding demo: networks, scenarios, disruptions, and saved route snapshots are validated at an HTTP boundary and persisted in SQLite through Prisma. The bundled Alder City network works without API keys, accounts, or external map services.
 
+**[Read the complete project report](docs/PROJECT_REPORT.md)** for a detailed product walkthrough, algorithm explanation, architecture analysis, testing strategy, tradeoffs, and interview preparation guide.
+
 ## Screenshots
 
 ![TransitLab desktop workbench](docs/transitlab-workbench.png)
