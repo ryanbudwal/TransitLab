@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "network": {
+    "name": "Alder City Transit",
+    "slug": "alder-city",
+    "description": "A fictional multi-line network designed to demonstrate transfers, alternate paths, accessibility constraints, and disruption-aware routing.",
+    "transferPenaltyMinutes": 4
+  },
+  "lines": [
+    { "code": "C", "name": "Coral Line", "color": "#e85d3f" },
+    { "code": "T", "name": "Teal Line", "color": "#2a9d8f" },
+    { "code": "G", "name": "Gold Line", "color": "#e9b949" },
+    { "code": "V", "name": "Violet Line", "color": "#8067b7" }
+  ],
+  "stations": [
+    {
+      "code": "HBR",
+      "name": "Harbour Front",
+      "x": 70,
+      "y": 390,
+      "accessible": true
+    },
+    {
+      "code": "QSD",
+      "name": "Quayside",
+      "x": 165,
+      "y": 335,
+      "accessible": true
+    },
+    { "code": "MUS", "name": "Museum", "x": 260, "y": 280, "accessible": true },
+    {
+      "code": "CTR",
+      "name": "Central Exchange",
+      "x": 380,
+      "y": 300,
+      "accessible": true
+    },
+    {
+      "code": "CVC",
+      "name": "Civic Centre",
+      "x": 500,
+      "y": 235,
+      "accessible": true
+    },
+    {
+      "code": "NTG",
+      "name": "Northgate",
+      "x": 625,
+      "y": 135,
+      "accessible": true
+    },
+    {
+      "code": "WPK",
+      "name": "West Park",
+      "x": 65,
+      "y": 185,
+      "accessible": true
+    },
+    { "code": "ARC", "name": "Arcade", "x": 165, "y": 230, "accessible": true },
+    {
+      "code": "MKT",
+      "name": "Market Square",
+      "x": 505,
+      "y": 360,
+      "accessible": true
+    },
+    {
+      "code": "RIV",
+      "name": "Riverside",
+      "x": 620,
+      "y": 405,
+      "accessible": true
+    },
+    {
+      "code": "EBK",
+      "name": "Eastbank",
+      "x": 730,
+      "y": 455,
+      "accessible": true
+    },
+    {
+      "code": "HIL",
+      "name": "Hillcrest",
+      "x": 245,
+      "y": 65,
+      "accessible": false
+    },
+    {
+      "code": "UNI",
+      "name": "University",
+      "x": 315,
+      "y": 175,
+      "accessible": true
+    },
+    {
+      "code": "GRD",
+      "name": "Botanic Gardens",
+      "x": 470,
+      "y": 425,
+      "accessible": true
+    },
+    {
+      "code": "AIR",
+      "name": "Alder Airport",
+      "x": 580,
+      "y": 535,
+      "accessible": true
+    },
+    {
+      "code": "LAK",
+      "name": "Lakeside",
+      "x": 635,
+      "y": 55,
+      "accessible": true
+    },
+    {
+      "code": "STD",
+      "name": "Stadium",
+      "x": 570,
+      "y": 145,
+      "accessible": true
+    },
+    {
+      "code": "OLD",
+      "name": "Old Town",
+      "x": 665,
+      "y": 305,
+      "accessible": false
+    }
+  ],
+  "connections": [
+    {
+      "from": "HBR",
+      "to": "QSD",
+      "line": "C",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "QSD",
+      "to": "MUS",
+      "line": "C",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "MUS",
+      "to": "CTR",
+      "line": "C",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "CTR",
+      "to": "CVC",
+      "line": "C",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "CVC",
+      "to": "NTG",
+      "line": "C",
+      "travelMinutes": 6,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "WPK",
+      "to": "ARC",
+      "line": "T",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "ARC",
+      "to": "MUS",
+      "line": "T",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "MUS",
+      "to": "CTR",
+      "line": "T",
+      "travelMinutes": 6,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "CTR",
+      "to": "MKT",
+      "line": "T",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "MKT",
+      "to": "RIV",
+      "line": "T",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "RIV",
+      "to": "EBK",
+      "line": "T",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "HIL",
+      "to": "UNI",
+      "line": "G",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": false
+    },
+    {
+      "from": "UNI",
+      "to": "CTR",
+      "line": "G",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "CTR",
+      "to": "GRD",
+      "line": "G",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "GRD",
+      "to": "AIR",
+      "line": "G",
+      "travelMinutes": 6,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "LAK",
+      "to": "STD",
+      "line": "V",
+      "travelMinutes": 4,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "MUS",
+      "to": "STD",
+      "line": "V",
+      "travelMinutes": 7,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "STD",
+      "to": "CVC",
+      "line": "V",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "CVC",
+      "to": "MKT",
+      "line": "V",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": true
+    },
+    {
+      "from": "MKT",
+      "to": "OLD",
+      "line": "V",
+      "travelMinutes": 5,
+      "bidirectional": true,
+      "accessible": false
+    }
+  ]
+}

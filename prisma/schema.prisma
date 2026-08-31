@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Network {
+  id                     String       @id
+  slug                   String       @unique
+  name                   String
+  description            String
+  schemaVersion          Int          @default(1)
+  transferPenaltyMinutes Int          @default(4)
+  isBuiltIn              Boolean      @default(false)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  stations               Station[]
+  lines                  Line[]
+  connections            Connection[]
+  scenarios              Scenario[]
+  savedRoutes            SavedRoute[]
+
+  @@index([name])
+}
+
+model Station {
+  id                     String                  @id
+  networkId              String
+  code                   String
+  name                   String
+  x                      Float
+  y                      Float
+  accessible             Boolean                 @default(true)
+  network                Network                 @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  outgoingConnections    Connection[]            @relation("ConnectionFrom")
+  incomingConnections    Connection[]            @relation("ConnectionTo")
+  scenarioOrigins        Scenario[]              @relation("ScenarioOrigin")
+  scenarioDestinations   Scenario[]              @relation("ScenarioDestination")
+  scenarioClosures       ScenarioClosedStation[]
+  savedRouteOrigins      SavedRoute[]            @relation("SavedRouteOrigin")
+  savedRouteDestinations SavedRoute[]            @relation("SavedRouteDestination")
+  legsFrom               SavedRouteLeg[]         @relation("LegFrom")
+  legsTo                 SavedRouteLeg[]         @relation("LegTo")
+
+  @@unique([networkId, id])
+  @@unique([networkId, code])
+  @@index([networkId, name])
+}
+
+model Line {
+  id                  String                   @id
+  networkId           String
+  code                String
+  name                String
+  color               String
+  network             Network                  @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  connections         Connection[]
+  scenarioDisruptions ScenarioLineDisruption[]
+  savedRouteLegs      SavedRouteLeg[]
+
+  @@unique([networkId, id])
+  @@unique([networkId, code])
+  @@index([networkId])
+}
+
+model Connection {
+  id             String          @id
+  networkId      String
+  fromStationId  String
+  toStationId    String
+  lineId         String
+  travelMinutes  Int
+  bidirectional  Boolean         @default(true)
+  accessible     Boolean         @default(true)
+  network        Network         @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  fromStation    Station         @relation("ConnectionFrom", fields: [networkId, fromStationId], references: [networkId, id], onDelete: Cascade)
+  toStation      Station         @relation("ConnectionTo", fields: [networkId, toStationId], references: [networkId, id], onDelete: Cascade)
+  line           Line            @relation(fields: [networkId, lineId], references: [networkId, id], onDelete: Cascade)
+  savedRouteLegs SavedRouteLeg[]
+
+  @@unique([networkId, fromStationId, toStationId, lineId])
+  @@index([networkId, fromStationId])
+  @@index([networkId, toStationId])
+  @@index([networkId, lineId])
+}
+
+model Scenario {
+  id                     String                   @id
+  networkId              String
+  name                   String
+  description            String                   @default("")
+  originStationId        String
+  destinationStationId   String
+  algorithm              String
+  preference             String
+  transferPenaltyMinutes Int
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  network                Network                  @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  originStation          Station                  @relation("ScenarioOrigin", fields: [networkId, originStationId], references: [networkId, id], onDelete: Restrict)
+  destinationStation     Station                  @relation("ScenarioDestination", fields: [networkId, destinationStationId], references: [networkId, id], onDelete: Restrict)
+  closedStations         ScenarioClosedStation[]
+  lineDisruptions        ScenarioLineDisruption[]
+  savedRoutes            SavedRoute[]
+
+  @@unique([networkId, id])
+  @@index([networkId, updatedAt])
+  @@index([networkId, name])
+}
+
+model ScenarioClosedStation {
+  scenarioId String
+  networkId  String
+  stationId  String
+  scenario   Scenario @relation(fields: [networkId, scenarioId], references: [networkId, id], onDelete: Cascade)
+  station    Station  @relation(fields: [networkId, stationId], references: [networkId, id], onDelete: Restrict)
+
+  @@id([scenarioId, stationId])
+  @@index([networkId, stationId])
+}
+
+model ScenarioLineDisruption {
+  scenarioId   String
+  networkId    String
+  lineId       String
+  suspended    Boolean  @default(false)
+  delayMinutes Int      @default(0)
+  scenario     Scenario @relation(fields: [networkId, scenarioId], references: [networkId, id], onDelete: Cascade)
+  line         Line     @relation(fields: [networkId, lineId], references: [networkId, id], onDelete: Restrict)
+
+  @@id([scenarioId, lineId])
+  @@index([networkId, lineId])
+}
+
+model SavedRoute {
+  id                   String          @id
+  networkId            String
+  scenarioId           String?
+  name                 String
+  originStationId      String
+  destinationStationId String
+  algorithm            String
+  preference           String
+  totalMinutes         Int
+  stopCount            Int
+  transferCount        Int
+  nodesExplored        Int
+  resultJson           String
+  requestFingerprint   String
+  createdAt            DateTime        @default(now())
+  network              Network         @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  scenario             Scenario?       @relation(fields: [scenarioId], references: [id], onDelete: SetNull)
+  originStation        Station         @relation("SavedRouteOrigin", fields: [originStationId], references: [id], onDelete: Restrict)
+  destinationStation   Station         @relation("SavedRouteDestination", fields: [destinationStationId], references: [id], onDelete: Restrict)
+  legs                 SavedRouteLeg[]
+
+  @@index([networkId, createdAt])
+  @@index([scenarioId])
+}
+
+model SavedRouteLeg {
+  savedRouteId           String
+  position               Int
+  connectionId           String
+  fromStationId          String
+  toStationId            String
+  lineId                 String
+  travelMinutes          Int
+  transferPenaltyMinutes Int
+  delayMinutes           Int
+  isTransfer             Boolean
+  savedRoute             SavedRoute @relation(fields: [savedRouteId], references: [id], onDelete: Cascade)
+  connection             Connection @relation(fields: [connectionId], references: [id], onDelete: Restrict)
+  fromStation            Station    @relation("LegFrom", fields: [fromStationId], references: [id], onDelete: Restrict)
+  toStation              Station    @relation("LegTo", fields: [toStationId], references: [id], onDelete: Restrict)
+  line                   Line       @relation(fields: [lineId], references: [id], onDelete: Restrict)
+
+  @@id([savedRouteId, position])
+  @@index([connectionId])
+}
